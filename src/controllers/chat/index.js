@@ -5,6 +5,8 @@ const Chats = require("../../models/chat");
 const saveChat = (data, socket) => {
   // console.log("chat", data);
   const chatMessage = data.text;
+  // generate public key
+
   Chats.create({ text: chatMessage, chatRoom: data.chatRoom })
     .then((chat) => {
       // console.log("chat", chat);
