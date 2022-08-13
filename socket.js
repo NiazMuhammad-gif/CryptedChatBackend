@@ -6,6 +6,7 @@ const socket = (io) => {
     console.log("client connected on websocket");
 
     socket.on("joinChatRoom", (data) => {
+      console.log("joinChatRoom", data);
       socket.join(data.chatRoom);
       fetchChat(data, io);
     });

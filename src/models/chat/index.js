@@ -4,9 +4,11 @@ const Chats = new mongoose.Schema(
   {
     text: {
       type: String,
-      required: true,
     },
     chatRoom: {
+      type: String,
+    },
+    encryptedKey: {
       type: String,
     },
   },
