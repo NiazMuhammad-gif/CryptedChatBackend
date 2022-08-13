@@ -67,15 +67,15 @@ app.use((req, res, next) => {
 //   console.log(`Server is running on port ${port}`);
 // });
 
-var keyArray = [
-  [2, 3],
-  [3, 6],
-];
 // var keyArray = [
-//   [2, 8, 3],
-//   [3, 9, 3],
-//   [5, 6, 9],
+//   [2, 3],
+//   [3, 6],
 // ];
+var keyArray = [
+  [2, 8, 3],
+  [3, 9, 3],
+  [5, 6, 9],
+];
 hillKey = "";
 keyArray.map((item) => {
   hillKey = hillKey + item[0] + item[1];
@@ -100,7 +100,7 @@ function reverseSearch(array, dimension) {
   var item;
 
   if (dimension == 2) {
-    console.log("hello");
+    // console.log("hello");
     for (var i in array) {
       item = array[i];
       strArray.push([alphabet[item[0]], alphabet[item[1]]]);
@@ -126,7 +126,7 @@ function modInverse(a, m) {
   if (atemp < 0) {
     atemp = m + atemp;
   }
-  console.log("atemp", atemp);
+  // console.log("atemp", atemp);
   for (var x = 1; x < m; x++) {
     if ((atemp * x) % m == 1) {
       return x;
@@ -170,7 +170,7 @@ function getColumnVectors(xdimgrams, dimensions) {
   return columnVectors;
 }
 
-console.log(keyArray);
+// console.log(keyArray);
 function getPremodMatrix(columnVectors, dimensions) {
   var premodArray = [];
   var kr0 = keyArray[0][0];
@@ -303,7 +303,7 @@ let cryptedText;
 function encrypt() {
   enc = true;
   console.log("plainT", plainT);
-  var dimension = 2;
+  var dimension = 3;
   var encryptedArray = [];
   var columnVectors;
   var topElement;
@@ -350,13 +350,13 @@ function encrypt() {
   }
 }
 
-// encrypt();
+encrypt();
 console.log("encrypted", cryptedText);
 
 function decrypt() {
   enc = false;
   var ciphT = cryptedText;
-  var dimension = 2;
+  var dimension = 3;
   var decryptedArray = [];
   var determinant;
   var columnVectors;
@@ -373,14 +373,14 @@ function decrypt() {
       var digrams = getDigrams(ciphT);
       determinant =
         keyArray[0][0] * keyArray[1][1] - keyArray[0][1] * keyArray[1][0];
-      console.log(determinant);
+      // console.log(determinant);
       multiplicativeInverse = modInverse(determinant, 26);
       columnVectors = getColumnVectors(digrams, 2);
       adjugateMatrix.push([keyArray[1][1], -keyArray[0][1] + 26]);
       adjugateMatrix.push([-keyArray[1][0] + 26, keyArray[0][0]]);
 
       for (var i in adjugateMatrix) {
-        console.log(adjugateMatrix[i], multiplicativeInverse);
+        // console.log(adjugateMatrix[i], multiplicativeInverse);
         inverseKeyMatrix.push([
           (adjugateMatrix[i][0] * multiplicativeInverse) % 26,
           (adjugateMatrix[i][1] * multiplicativeInverse) % 26,
@@ -400,9 +400,12 @@ function decrypt() {
         decryptedArray.push([topElement, bottomElement]);
       }
 
-      console.log(
-        reverseSearch(decryptedArray, 2).toString().replace(/,/gi, "")
-      );
+      // console.log(
+      //   reverseSearch(decryptedArray, 2).toString().replace(/,/gi, "")
+      // );
+      cryptedText = reverseSearch(decryptedArray, 2)
+        .toString()
+        .replace(/,/gi, "");
     } else {
       var trigraph = getTrigraph(ciphT);
       columnVectors = getColumnVectors(trigraph, 3);
@@ -506,95 +509,120 @@ function decrypt() {
         decryptedArray.push([topElement, middleElement, bottomElement]);
       }
 
-      console.log(
-        reverseSearch(decryptedArray, 3).toString().replace(/,/gi, " ")
-      );
+      // console.log(
+      //   reverseSearch(decryptedArray, 3).toString().replace(/,/gi, " ")
+      // );
+      cryptedText = reverseSearch(decryptedArray, 3)
+        .toString()
+        .replace(/,/gi, "");
     }
   }
 }
-// decrypt();
+decrypt();
+console.log(cryptedText);
 
-let p = 19;
-let q = 41;
-
-let n = p * q;
-
-console.log("n", n);
-
-let t = (p - 1) * (q - 1);
-
-console.log("totient function", t);
-
-function gcd_two_numbers(x, y) {
-  if (typeof x !== "number" || typeof y !== "number") return false;
-  x = Math.abs(x);
-  y = Math.abs(y);
-  while (y) {
-    var t = y;
-    y = x % y;
-    x = t;
-  }
-  return x;
-}
-// get array of prime numbers
-function primeFactorsTo(max) {
-  var store = [],
-    i,
-    j,
-    primes = [];
-  for (i = 2; i <= max; ++i) {
-    if (!store[i]) {
-      primes.push(i);
-      for (j = i << 1; j <= max; j += i) {
-        store[j] = true;
-      }
-    }
-  }
-  return primes;
-}
-
-// console.log(primeFactorsTo(t));
-let primeArray = primeFactorsTo(t);
-let e;
-for (let i = 2; i < primeArray.length; i++) {
-  let cc = gcd_two_numbers(primeArray[i], t);
-  if (cc == 1) {
-    e = primeArray[i];
+for (let i = cryptedText.length - 1; i >= 0; ) {
+  console.log(cryptedText[i]);
+  let aa = cryptedText[i];
+  if (aa != "x") {
+    console.log("qq");
     break;
+  } else if (aa == "x") {
+    console.log("3", aa, i);
+    cryptedText = cryptedText.replace(aa, "");
+    i = i - 1;
   }
 }
-// Assume e such that gcd(e,t)==1 & 1<e<t
-// e = 7
 
-console.log("e", e);
+console.log(cryptedText);
 
-// find d
+// let p = 3;
+// let q = 11;
 
-// d * e mod t = 1
-let d;
-for (let j = 2; j < 10000; j++) {
-  if ((j * e) % t == 1) {
-    d = j;
-    break;
-  }
-}
-console.log("d", d);
+// let n = p * q;
 
-// encryption
-// message == hill key
+// console.log("n", n);
 
-let message = 55;
-console.log("message = ", message);
-console.log(">>>>>>>>> ENCRYPTION<<<<<<<<<");
-let c = Math.pow(message, e) % n;
-console.log("encrypted text C = ", c);
+// let t = (p - 1) * (q - 1);
 
-console.log(">>>>>>>>> DECRYPTION<<<<<<<<<");
-// let M = Math.pow(c, d) % n;
-pow = Math.pow(c, d);
-console.log(pow);
-pp = (p % n) + n;
-console.log(pp);
-let M = pp % n;
+// console.log("totient function", t);
 
-console.log("Message M = ", M);
+// function gcd_two_numbers(x, y) {
+//   if (typeof x !== "number" || typeof y !== "number") return false;
+//   x = Math.abs(x);
+//   y = Math.abs(y);
+//   while (y) {
+//     var t = y;
+//     y = x % y;
+//     x = t;
+//   }
+//   return x;
+// }
+// // get array of prime numbers
+// function primeFactorsTo(max) {
+//   var store = [],
+//     i,
+//     j,
+//     primes = [];
+//   for (i = 2; i <= max; ++i) {
+//     if (!store[i]) {
+//       primes.push(i);
+//       for (j = i << 1; j <= max; j += i) {
+//         store[j] = true;
+//       }
+//     }
+//   }
+//   return primes;
+// }
+
+// // console.log(primeFactorsTo(t));
+// let primeArray = primeFactorsTo(t);
+// let e;
+// for (let i = 2; i < primeArray.length; i++) {
+//   let cc = gcd_two_numbers(primeArray[i], t);
+//   if (cc == 1) {
+//     e = primeArray[i];
+//     break;
+//   }
+// }
+// // Assume e such that gcd(e,t)==1 & 1<e<t
+// // e = 7
+
+// console.log("e", e);
+
+// // find d
+
+// // d * e mod t = 1
+// let d;
+// for (let j = 2; j < 10000; j++) {
+//   if ((j * e) % t == 1) {
+//     d = j;
+//     break;
+//   }
+// }
+// console.log("d", d);
+
+// // encryption
+// // message == hill key
+// let cryptedArray = [];
+// console.log(">>>>>>>>> ENCRYPTION<<<<<<<<<");
+// for (let i = 0; i < hillKey.length; i++) {
+//   let message = +hillKey[i];
+//   console.log("message = ", message);
+//   let c = Math.pow(message, e) % n;
+//   console.log("encrypted text C = ", c);
+//   cryptedArray.push(c);
+// }
+// console.log(">>>>>>>>> DECRYPTION<<<<<<<<<");
+// console.log("cryptedArray", cryptedArray);
+// let index = 0;
+// for (let i = 0; i < cryptedArray.length; i++) {
+//   let M = Math.pow(cryptedArray[i], d) % n;
+//   // pow = Math.pow(c, d);
+//   // console.log(pow);
+//   // pp = (p % n) + n;
+//   // console.log(pp);
+//   // let M = pp % n;
+
+//   console.log("Message M = ", M);
+// }
