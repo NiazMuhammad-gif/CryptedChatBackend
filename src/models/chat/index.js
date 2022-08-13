@@ -9,7 +9,7 @@ const Chats = new mongoose.Schema(
       type: String,
     },
     encryptedKey: {
-      type: String,
+      type: Array,
     },
   },
   {
