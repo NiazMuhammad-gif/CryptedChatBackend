@@ -521,15 +521,15 @@ function decrypt() {
 decrypt();
 console.log(cryptedText);
 
-for (let i = cryptedText.length - 1; i >= 0; ) {
-  console.log(cryptedText[i]);
+for (let i = cryptedText.length - 1; i > 0; ) {
+  // console.log(cryptedText[i]);
   let aa = cryptedText[i];
   if (aa != "x") {
-    console.log("qq");
+    // console.log("qq");
     break;
   } else if (aa == "x") {
-    console.log("3", aa, i);
-    cryptedText = cryptedText.replace(aa, "");
+    // console.log("3", aa, i);
+    cryptedText = cryptedText.slice(0, i);
     i = i - 1;
   }
 }
